@@ -7,6 +7,7 @@ const { dirname } = require('path');
 //const { fileURLToPath } = require('url');
 //const __filename = fileURLToPath(import.meta.url);
 //const __dirname = dirname();
+const scheduleRouter = require('./routes/scheduleRouter.js');
 const PORT = 4000;
 
 //middleware
@@ -14,14 +15,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
+
+
+//routers
+app.use('/workouts', scheduleRouter);
+
 //default route handler
 app.get('/', function (req, res) {
   res.send('Hello World');
 });
-
-//routers
-
-
 
 //global error handler
 app.use((err, req, res, next) => {
@@ -34,7 +36,7 @@ app.use((err, req, res, next) => {
   return res.status(errorObj.status).json(errorObj.message);
 });
 
-console.log(PORT);
+
 //initialize server
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
