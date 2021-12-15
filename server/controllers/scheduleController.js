@@ -12,12 +12,12 @@ function addWorkout(req, res, next) {
   };
   const sql = 'INSERT INTO workouts (name, filming_date_time, filming_duration, status, userID, level) VALUES (?,?,?,?,?,?)';
   const params = [data.name, data.filming_date_time, data.filming_duration, data.status, data.userID, data.level];
-
+  
   db.run(sql, params, function(err) {
     if (err) {
       return console.error(err.message);
     }
-
+    
     res.body = {
       'workout': data
     };
@@ -33,28 +33,28 @@ function updateWorkout(req, res, next){
     console.log('must include workoutID in request body');
     throw error;
   }
-  const target = req.body.workoutID;
-  const data = Object.entries(req.body);
+  const data = {
+    workoutID: req.body.workoutID,
+    status: req.body.status
+  };
   const sql = `UPDATE workouts 
-                SET ? = ? 
-                WHERE workoutID = ?`;
-
-  //performs db transaction per key/value pair --- naive solution
-  for(const [key, value] of data) {
-    if(key !== 'workoutID'){
-      db.run(sql, [key, value, target], function(err) {
-        if (err) {
-          return console.error(err.message);
-        }
-        res.body = {
-          'workout': data
-        };
-        console.log(`Rows inserted ${this.changes}`);
-        return next();
-      });
+    SET status = ? 
+    WHERE workoutID = ?`;
+    
+  db.run(sql, [data.status, data.workoutID], function(err) {
+    if (err) {
+      return console.error(err.message);
     }
-  }
-
+    res.body = {
+      'statusChange': {
+        'workoutID': data.workoutID,
+        'status': data.status
+      }
+    };
+    console.log(`Row(s) updated ${this.changes}`);
+    return next();
+  });
+  
 }
 
 function getWorkouts(req, res, next) {
@@ -71,14 +71,13 @@ function getWorkouts(req, res, next) {
     };
     return next();
   });
-
+  
 }
-  
-  
+
+
 module.exports = {
   addWorkout,
   updateWorkout,
   getWorkouts,
 };
-  
-  
+
