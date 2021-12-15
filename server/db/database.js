@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 
 //connect to "trialdb" databse
-const db = new sqlite3.Database('./trialdb.db', (err) => {
+const db = new sqlite3.Database('./server/db/trialdb.db', (err) => {
   if (err) {
     console.error(err.message);
   }

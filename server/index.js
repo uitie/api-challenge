@@ -14,9 +14,6 @@ const PORT = 4000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-
-
 //routers
 app.use('/workouts', scheduleRouter);
 
