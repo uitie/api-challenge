@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { addWorkout, getWorkouts, updateWorkout, searchWorkouts } = require('../controllers/scheduleController.js');
+const { addWorkout, getWorkouts, updateWorkout, searchWorkouts, getTrainer } = require('../controllers/scheduleController.js');
 const scheduleRouter = Router(); 
 
 
@@ -22,6 +22,11 @@ scheduleRouter.get('/getWorkouts', getWorkouts, (req, res) => {
 scheduleRouter.get('/searchWorkouts', searchWorkouts, (req, res) => {
   console.log('searchWorkouts router firing');
   res.status(200).json(res.body.workouts);
+});
+
+scheduleRouter.get('/getTrainer', getTrainer, (req, res) => {
+  console.log('getTrainer router firing');
+  res.status(200).json(res.body.trainer);
 });
 
 module.exports = scheduleRouter;
