@@ -77,11 +77,19 @@ function getWorkouts(req, res, next) {
 function searchWorkouts(req, res, next) {
   //input validation
   if(!req.body.workoutID){
-    console.log('Please include the workoutID of the workout that you\'re looking for. \n If you\'d like to see a list of all workouts, set the workoutID property to "none" within the body of your request.');
-    throw error;
+    const errMsg = 'Please include the workoutID of the workout that you\'re looking for. \n If you\'d like a filtered list of workouts, please set the workoutID property to "none" within the body of your request.';
+
+    console.error({error: errMsg});
+    res.status(400).json({'error': errMsg});
+
+    return;
   } else if(!req.body.filterName || !req.body.filterVal){
-    console.log('Please set the value of the <filterName> property in the body of your request to one of the following: "Name", "Filming_date_time", "Filming_duration", "Status", "Level", or "Trainer". Set the <filterVal> property to match the reults you\'d like to see. (Example: <filterName: trainer> and <filterVal: Mark> will show all workouts that have been assigned to Mark.');
-    throw error;
+    const errMsg = 'Please set the value of the <filterName> property in the body of your request to one of the following: "Name", "Filming_date_time", "Filming_duration", "Status", "Level", or "Trainer". Set the <filterVal> property to match the reults you\'d like to see. (Example: <filterName: trainer> and <filterVal: Mark> will show all workouts that have been assigned to Mark.';
+
+    console.error({error: errMsg});
+    res.status(400).json({'error': errMsg});
+    
+    return;
   }
 
   // eslint-disable-next-line quotes
@@ -108,6 +116,8 @@ function searchWorkouts(req, res, next) {
     });
   };
   
+  //
+
   //filter by workout name
   if(data.filterName === 'Name') {
     sqlQuery = 'SELECT * FROM workouts WHERE name = ? ORDER BY filming_date_time';

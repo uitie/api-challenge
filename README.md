@@ -24,7 +24,7 @@ Producers create schedules for `workout` shoots and assign `trainers` to them. T
 - `Name` - Free form name for the workout
 - `Filming Date/Time` - In ISO 8601 format
 - `Filming Duration` - Integer representing duration in minutes
-- `Status` - Current workout status like `planning`, `ready`, `completed` and `canceled`
+- `Status` - Current workout status like `planning`, `ready`, `completed` and `e`
 - `Trainer` - Person who will be doing this specific workout
 - `Level` - Difficulty like `beginner`, `intermediate` or `advanced`
 
