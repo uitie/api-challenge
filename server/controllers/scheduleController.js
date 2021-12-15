@@ -75,20 +75,13 @@ function getWorkouts(req, res, next) {
 }
 
 function searchWorkouts(req, res, next) {
-  //input validation
-  if(!req.body.workoutID){
-    const errMsg = 'Please include the workoutID of the workout that you\'re looking for. \n If you\'d like a filtered list of workouts, please set the workoutID property to "none" within the body of your request.';
+  //initial input validation
+  if(( !req.body.workoutID )){
+    const errMsg = 'Please include the workoutID of the workout that you\'re looking for and. \n If you\'d like a filtered list of workouts, please set the workoutID property to "none" within the body of your request.';
 
     console.error({error: errMsg});
     res.status(400).json({'error': errMsg});
 
-    return;
-  } else if(!req.body.filterName || !req.body.filterVal){
-    const errMsg = 'Please set the value of the <filterName> property in the body of your request to one of the following: "Name", "Filming_date_time", "Filming_duration", "Status", "Level", or "Trainer". Set the <filterVal> property to match the reults you\'d like to see. (Example: <filterName: trainer> and <filterVal: Mark> will show all workouts that have been assigned to Mark.';
-
-    console.error({error: errMsg});
-    res.status(400).json({'error': errMsg});
-    
     return;
   }
 
@@ -102,7 +95,7 @@ function searchWorkouts(req, res, next) {
 
   //keeping things DRY
   function dbSearchFunc(sqlQuery){
-    db.all(sqlQuery, data.filterVal, (err, rows) => {
+    db.all(sqlQuery, data.filterVal || data.workoutID, (err, rows) => {
       if (err) {
         console.error(err);
         res.status(400).json({'error':err.message});
@@ -116,7 +109,25 @@ function searchWorkouts(req, res, next) {
     });
   };
   
-  //
+  //return specific workout based on workoutID
+  if(data.workoutID !== 'none' && data.workoutID >= 1) {
+    //data.filterVal = data.workoutID;
+    sqlQuery = 'SELECT * FROM workouts WHERE workoutID = ? ORDER BY filming_date_time';
+    dbSearchFunc(sqlQuery);
+
+    //code continues executing past this scope wiithout this return statement
+    return;
+  }
+
+  //input validation for filter operations
+  if(( !req.body.filterName || !req.body.filterVal )){
+    const errMsg = 'Please set the value of the <filterName> property in the body of your request to one of the following: "Name", "Filming_date_time", "Filming_duration", "Status", "Level", or "Trainer". Set the <filterVal> property to match the reults you\'d like to see. (Example: <filterName: trainer> and <filterVal: Mark> will show all workouts that have been assigned to Mark.';
+
+    console.error({error: errMsg});
+    res.status(400).json({'error': errMsg});
+
+    return;
+  }
 
   //filter by workout name
   if(data.filterName === 'Name') {
