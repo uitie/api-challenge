@@ -10,7 +10,7 @@ scheduleRouter.post('/addWorkout', addWorkout, (req, res) => {
 });
 
 scheduleRouter.get('/getWorkouts', getWorkouts, (req, res) => {
-  console.log('getWorkout router firing');
+  console.log('getWorkouts router firing');
   res.status(200).json(res.body.workouts);
 });
 

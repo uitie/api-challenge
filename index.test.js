@@ -14,16 +14,16 @@ describe('/', () => {
 
 //test </workouts> endpoint
 describe('Test routes', () => {
-  it('workouts/addWorkout route works', (done) => {
+  it('addWorkout route works', (done) => {
     request(app)
       .post('/workouts/addWorkout')
       .send({
-        name: "name_of_workout",
-        filming_date_time: "YYYY-MM-14Thh:mmTZD",
+        name: 'name_of_workout',
+        filming_date_time: 'YYYY-MM-14Thh:mmTZD',
         filming_duration: 60, 
-        status: "planned_ready_completed_canceled",
+        status: 'planned_ready_completed_canceled',
         userID: 1,
-        level: "beginner_intermediate_advanced"
+        level: 'beginner_intermediate_advanced'
       })
       .set('Accept', 'application/json')
       .expect(200)
@@ -32,4 +32,17 @@ describe('Test routes', () => {
         return done();
       });
   });
+
+  it('getWorkouts route works', (done) => {
+    request(app)
+      .get('/workouts/getWorkouts')
+      .set('Accept', 'application/json')
+      .send()
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        return done();
+      });
+  });
+
 });
