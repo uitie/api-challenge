@@ -1,4 +1,4 @@
-require('dotenv').config({path:__dirname + '../.env'});
+require('dotenv').config({path: __dirname + '/../.env'});
 const express = require('express');
 const app = express();
 const fetch = require('node-fetch');
@@ -8,7 +8,7 @@ const { dirname } = require('path');
 //const __filename = fileURLToPath(import.meta.url);
 //const __dirname = dirname();
 const scheduleRouter = require('./routes/scheduleRouter.js');
-const PORT = 4000;
+const PORT = process.env.PORT;
 
 //middleware
 app.use(express.json());
