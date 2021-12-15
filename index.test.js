@@ -12,7 +12,7 @@ describe('/', () => {
   });
 });
 
-//test </workouts> endpoint
+//test </workouts and /auth> endpoints
 describe('Test routes', () => {
   it('addWorkout route works', (done) => {
     request(app)
@@ -21,9 +21,9 @@ describe('Test routes', () => {
         name: 'name_of_workout',
         filming_date_time: 'YYYY-MM-14Thh:mmTZD',
         filming_duration: 60, 
-        status: 'planned_ready_completed_canceled',
+        status: 'ready',
         userID: 1,
-        level: 'beginner_intermediate_advanced'
+        level: 'Advanced'
       })
       .set('Accept', 'application/json')
       .expect(200)
@@ -38,6 +38,20 @@ describe('Test routes', () => {
       .get('/workouts/getWorkouts')
       .set('Accept', 'application/json')
       .send()
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        return done();
+      });
+  });
+
+  it('login route works', (done) => {
+    request(app)
+      .get('/auth/login')
+      .send({
+        userID: 4, 
+        password: 'testPassword'})
+      .set('Accept', 'application/json')
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
