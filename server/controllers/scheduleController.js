@@ -8,7 +8,10 @@ function addWorkout(req, res, next) {
     status: req.body.status,
     userID: req.body.userID,
     level: req.body.level
-  }
+  };
+
+  //input validation
+  
   const sql = 'INSERT INTO workouts (name, filming_date_time, filming_duration, status, userID, level) VALUES (?,?,?,?,?,?)';
   const params = [data.name, data.filming_date_time, data.filming_duration, data.status, data.userID, data.level];
 
