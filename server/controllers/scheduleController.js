@@ -40,7 +40,7 @@ function updateWorkout(req, res, next){
   const sql = `UPDATE workouts 
     SET status = ? 
     WHERE workoutID = ?`;
-    
+
   db.run(sql, [data.status, data.workoutID], function(err) {
     if (err) {
       return console.error(err.message);
@@ -74,10 +74,30 @@ function getWorkouts(req, res, next) {
   
 }
 
+function searchWorkouts(req, res, next) {
+  const sqlQuery = 'SELECT * FROM workouts';
+  db.all(sqlQuery, params = [], (err, rows) => {
+    if (err) {
+      console.error(err);
+      res.status(400).json({'error':err.message});
+      return;
+    }
+    console.log(rows);
+    res.body = {
+      'workouts': rows
+    };
+    return next();
+  });
+  
+}
+
+
+
 
 module.exports = {
   addWorkout,
   updateWorkout,
   getWorkouts,
+  searchWorkouts
 };
 

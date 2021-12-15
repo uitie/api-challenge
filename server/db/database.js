@@ -23,9 +23,9 @@ const db = new sqlite3.Database('./server/db/trialdb.db', (err) => {
 			"Name"	TEXT NOT NULL,
 			"Filming_date_time"	TEXT NOT NULL,
 			"Filming_duration"	INTEGER NOT NULL,
-			"Status"	TEXT NOT NULL,
+			"Status"	TEXT NOT NULL CHECK("STATUS" = "planning" OR "STATUS" = "ready" OR "STATUS" = "completed" OR "STATUS" = "canceled"),
 			"UserID"	INTEGER NOT NULL,
-			"Level"	TEXT NOT NULL,
+			"Level"	TEXT NOT NULL CHECK("LEVEL" = "Beginner" OR "LEVEL" = "Intermediate" OR "LEVEL" = "Advanced"),
 			"WorkoutID"	INTEGER NOT NULL UNIQUE,
 			FOREIGN KEY("UserID") REFERENCES "users"("UserID"),
 			PRIMARY KEY("WorkoutID" AUTOINCREMENT)
