@@ -4,11 +4,9 @@ const app = express();
 const fetch = require('node-fetch');
 const path = require('path');
 const { dirname } = require('path');
-//const { fileURLToPath } = require('url');
-//const __filename = fileURLToPath(import.meta.url);
-//const __dirname = dirname();
 const scheduleRouter = require('./routes/scheduleRouter.js');
-const PORT = process.env.PORT;
+const authRouter = require('./routes/authRouter.js');
+const PORT = process.env.PORT || 4000;
 
 //middleware
 app.use(express.json());
@@ -16,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //routers
 app.use('/workouts', scheduleRouter);
+app.use('/auth', authRouter);
 
 //default route handler
 app.get('/', function (req, res) {
