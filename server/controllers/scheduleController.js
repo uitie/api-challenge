@@ -77,14 +77,14 @@ function getWorkouts(req, res, next) {
 function searchWorkouts(req, res, next) {
   //initial input validation
   if(( !req.body.workoutID )){
-    const errMsg = 'Please include the workoutID of the workout that you\'re looking for and. \n If you\'d like a filtered list of workouts, please set the workoutID property to "none" within the body of your request.';
-
+    const errMsg = 'Please include the workoutID of the workout that you\'re looking for. \n If you\'d like a filtered list of workouts, please set the workoutID property to "none" within the body of your request.';
+    
     console.error({error: errMsg});
     res.status(400).json({'error': errMsg});
-
+    
     return;
   }
-
+  
   // eslint-disable-next-line quotes
   let sqlQuery = ``;
   const data = {
@@ -92,7 +92,7 @@ function searchWorkouts(req, res, next) {
     filterName: req.body.filterName,
     filterVal: req.body.filterVal
   };
-
+  
   //keeping things DRY
   function dbSearchFunc(sqlQuery){
     db.all(sqlQuery, data.filterVal || data.workoutID, (err, rows) => {
@@ -114,47 +114,47 @@ function searchWorkouts(req, res, next) {
     //data.filterVal = data.workoutID;
     sqlQuery = 'SELECT * FROM workouts WHERE workoutID = ? ORDER BY filming_date_time';
     dbSearchFunc(sqlQuery);
-
+    
     //code continues executing past this scope wiithout this return statement
     return;
   }
-
+  
   //input validation for filter operations
   if(( !req.body.filterName || !req.body.filterVal )){
     const errMsg = 'Please set the value of the <filterName> property in the body of your request to one of the following: "Name", "Filming_date_time", "Filming_duration", "Status", "Level", or "Trainer". Set the <filterVal> property to match the reults you\'d like to see. (Example: <filterName: trainer> and <filterVal: Mark> will show all workouts that have been assigned to Mark.';
-
+    
     console.error({error: errMsg});
     res.status(400).json({'error': errMsg});
-
+    
     return;
   }
-
+  
   //filter by workout name
   if(data.filterName === 'Name') {
     sqlQuery = 'SELECT * FROM workouts WHERE name = ? ORDER BY filming_date_time';
     dbSearchFunc(sqlQuery);
     
-  //filter by scheduled date & time
+    //filter by scheduled date & time
   } else if(data.filterName === 'Filming_date_time') {
     sqlQuery = 'SELECT * FROM workouts WHERE filming_date_time = ? ORDER BY filming_date_time';
     dbSearchFunc(sqlQuery);
-
-  //filter by filming duration
+    
+    //filter by filming duration
   } else if(data.filterName === 'Filming_duration') {
     sqlQuery = 'SELECT * FROM workouts WHERE filming_duration = ? ORDER BY filming_date_time';
     dbSearchFunc(sqlQuery);
-  
-  //filter by shoot status
+    
+    //filter by shoot status
   } else if(data.filterName === 'Status') {
     sqlQuery = 'SELECT * FROM workouts WHERE status = ?';
     dbSearchFunc(sqlQuery);
-  
-  //filter by workout defficulty level
+    
+    //filter by workout defficulty level
   } else if(data.filterName === 'Level') {
     sqlQuery = 'SELECT * FROM workouts WHERE level = ? ORDER BY filming_date_time';
     dbSearchFunc(sqlQuery);
-  
-  //filter by name of trainer
+    
+    //filter by name of trainer
   } else if(data.filterName === 'Trainer') {
     //additional input validation
     if(typeof data.filterVal !== 'string'){
@@ -164,16 +164,50 @@ function searchWorkouts(req, res, next) {
     sqlQuery = 'SELECT * FROM workouts LEFT JOIN users USING (userID) WHERE users.name = ? ORDER BY filming_date_time';
     dbSearchFunc(sqlQuery);
   }
-
+  
 }
 
+function getTrainer(req, res, next) {
+  //input validation
+  if(( !req.body.userID )){
+    const errMsg = 'Please include the userID of the trainer that you\'re looking for. \n Trainer ID\'s can be found by visiting the "/workouts/getWorkouts" route.';
+    
+    console.error({error: errMsg});
+    res.status(400).json({'error': errMsg});
+    
+    return;
+  }
+  
+  // eslint-disable-next-line quotes
+  const sqlQuery = 'SELECT users.name AS Trainer, filming_date_time, workouts.name, workoutID, status, level, users.picture AS Trainer_Photo FROM workouts INNER JOIN users USING (userID) WHERE users.userID = ? ORDER BY filming_date_time';
+  const data = {
+    userID: req.body.userID
+  };
+  
+  db.all(sqlQuery, data.userID, (err, rows) => {
+    if (err) {
+      console.error(err);
+      res.status(400).json({'error':err.message});
+      return;
+    }
+    console.log(rows);
+    
+    //need to convert photo from current array buffer to base64 string in order to view in browser via DOM manipulation or write to file system
+    res.body = {
+      'trainer': rows
+    };
 
+    return next();
+  });
+
+}
 
 
 module.exports = {
   addWorkout,
   updateWorkout,
   getWorkouts,
-  searchWorkouts
+  searchWorkouts,
+  getTrainer
 };
 
