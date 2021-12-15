@@ -1,0 +1,52 @@
+Add Workout:
+curl --location --request POST 'http://localhost:3000/workouts/addWorkout' \
+--header 'Content-Type: application/json' \
+--data-raw '{"name": "HIIT test",
+"filming_date_time": "2021-12-14T14:24:30+0000",
+"filming_duration": 60, 
+"status": "planning",
+"userID": 1,
+"level": "Intermediate"
+}'
+
+Get All Workouts:
+curl --location --request GET 'http://localhost:3000/workouts/getWorkouts'
+
+Update Workout:
+curl --location --request POST 'http://localhost:3000/workouts/updateWorkout' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"workoutID": 1,
+"status": "ready"
+}'
+
+Get Specific Workout:
+curl --location --request GET 'http://localhost:3000/workouts/searchWorkouts' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"workoutID": 1
+}'
+
+Filter Workouts by Level:
+curl --location --request GET 'http://localhost:3000/workouts/searchWorkouts' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"workoutID": "none",
+"filterName": "Level",
+"filterVal": "Intermediate"
+}'
+
+Get Workouts Assigned to Specific Trainer (by ID):
+curl --location --request GET 'http://localhost:3000/workouts/getTrainer' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"userID": 2
+}'
+
+Authenticate User Credentials:
+curl --location --request GET 'http://localhost:3000/auth/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"userID": 1,
+"password": "password"
+}'
